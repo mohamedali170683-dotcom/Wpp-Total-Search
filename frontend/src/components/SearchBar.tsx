@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useRef, type FormEvent } from "react";
+import { searchKeywords } from "@/lib/demo-data";
 
 interface SearchBarProps {
   onSearch: (keyword: string) => void;
@@ -14,9 +15,30 @@ export default function SearchBar({
   placeholder = "Enter a keyword (e.g. protein powder, gym aesthetic)",
 }: SearchBarProps) {
   const [value, setValue] = useState("");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  function handleChange(input: string) {
+    setValue(input);
+    if (input.trim().length > 0) {
+      const matches = searchKeywords(input).map((k) => k.keyword);
+      setSuggestions(matches);
+      setShowSuggestions(matches.length > 0);
+    } else {
+      setShowSuggestions(false);
+    }
+  }
+
+  function handleSelect(keyword: string) {
+    setValue(keyword);
+    setShowSuggestions(false);
+    onSearch(keyword);
+  }
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    setShowSuggestions(false);
     const trimmed = value.trim();
     if (trimmed) onSearch(trimmed);
   }
@@ -38,12 +60,34 @@ export default function SearchBar({
           />
         </svg>
         <input
+          ref={inputRef}
           type="text"
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => handleChange(e.target.value)}
+          onFocus={() => {
+            if (value.trim()) handleChange(value);
+          }}
+          onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
           placeholder={placeholder}
           className="w-full rounded-xl border border-zinc-700 bg-zinc-800/50 py-3 pl-11 pr-4 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
         />
+
+        {/* Autocomplete dropdown */}
+        {showSuggestions && (
+          <ul className="absolute z-50 mt-1 w-full rounded-xl border border-zinc-700 bg-zinc-800 shadow-xl overflow-hidden">
+            {suggestions.map((kw) => (
+              <li key={kw}>
+                <button
+                  type="button"
+                  onMouseDown={() => handleSelect(kw)}
+                  className="w-full text-left px-4 py-2.5 text-sm text-zinc-300 hover:bg-zinc-700/60 hover:text-zinc-100 transition-colors"
+                >
+                  {kw}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       <button
         type="submit"
