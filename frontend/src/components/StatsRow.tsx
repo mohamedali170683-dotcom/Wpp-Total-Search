@@ -8,9 +8,11 @@ interface Props {
 }
 
 export default function StatsRow({ data }: Props) {
-  const platformCount = Object.keys(data.platforms).length;
+  const totalPlatforms = Object.keys(data.platforms).length;
+  const activePlatforms = Object.values(data.platforms).filter(
+    (p) => p.volume > 0
+  ).length;
 
-  const totalVolume = data.total_volume;
   const primaryPlatform = data.primary_platform
     ? PLATFORM_LABELS[data.primary_platform] || data.primary_platform
     : "N/A";
@@ -19,29 +21,29 @@ export default function StatsRow({ data }: Props) {
     ? data.platforms[data.primary_platform]?.volume ?? 0
     : 0;
   const primaryShare =
-    totalVolume > 0 ? ((primaryVolume / totalVolume) * 100).toFixed(0) : "0";
+    data.total_volume > 0
+      ? ((primaryVolume / data.total_volume) * 100).toFixed(1)
+      : "0";
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <Stat
-        label="Total Search Demand"
-        value={formatVolume(totalVolume)}
-        subtitle="Monthly searches"
+        label="TOTAL SEARCH VOLUME"
+        value={formatVolume(data.total_volume)}
+        subtitle="Monthly across all platforms"
+        borderColor="border-l-4 border-l-indigo-500"
       />
       <Stat
-        label="Primary Channel"
+        label="ACTIVE PLATFORMS"
+        value={`${activePlatforms} / ${totalPlatforms}`}
+        subtitle="Platforms with demand signals"
+        borderColor="border-l-4 border-l-emerald-500"
+      />
+      <Stat
+        label="TOP PLATFORM"
         value={primaryPlatform}
-        subtitle={`${primaryShare}% of total demand`}
-      />
-      <Stat
-        label="Platforms Tracked"
-        value={platformCount.toString()}
-        subtitle="Active channels"
-      />
-      <Stat
-        label="Opportunity Score"
-        value={platformCount > 1 ? "See below" : "N/A"}
-        subtitle="Platform gap analysis"
+        subtitle={`${primaryShare}% of total volume`}
+        borderColor="border-l-4 border-l-amber-500"
       />
     </div>
   );
@@ -51,16 +53,22 @@ function Stat({
   label,
   value,
   subtitle,
+  borderColor,
 }: {
   label: string;
   value: string;
   subtitle: string;
+  borderColor: string;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-      <p className="text-xs font-medium text-slate-500 mb-1">{label}</p>
-      <p className="text-xl font-bold text-slate-900">{value}</p>
-      <p className="text-xs text-slate-400 mt-0.5">{subtitle}</p>
+    <div
+      className={`rounded-xl border border-slate-200 bg-white p-5 shadow-sm ${borderColor}`}
+    >
+      <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
+        {label}
+      </p>
+      <p className="text-2xl font-bold text-slate-900">{value}</p>
+      <p className="text-xs text-slate-500 mt-1">{subtitle}</p>
     </div>
   );
 }

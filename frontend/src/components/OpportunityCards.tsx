@@ -68,7 +68,7 @@ export default function OpportunityCards({ gaps, overallScore }: Props) {
           return (
             <div
               key={i}
-              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+              className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="flex items-center justify-between mb-3">
                 <span className="text-sm font-semibold text-slate-800">

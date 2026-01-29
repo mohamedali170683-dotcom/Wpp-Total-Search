@@ -4,30 +4,28 @@ import { useState } from "react";
 import SearchBar from "@/components/SearchBar";
 import StatsRow from "@/components/StatsRow";
 import PlatformVolumeChart from "@/components/PlatformVolumeChart";
-import PlatformCards from "@/components/PlatformCards";
 import OpportunityCards from "@/components/OpportunityCards";
 import BrandAudit from "@/components/BrandAudit";
 import { getCrossPlatformKeyword } from "@/lib/api";
 import { analyzeKeyword } from "@/lib/analyzer";
+import { PLATFORM_LABELS, formatVolume, trendDirection } from "@/lib/platform-config";
 import type { CrossPlatformKeyword, OpportunityAnalysis } from "@/lib/types";
 
-type ActiveSection = "dashboard" | "brand-audit";
+type ActiveSection = "keywords" | "demand" | "compare" | "brand-audit";
 
 export default function Home() {
   const [activeSection, setActiveSection] =
-    useState<ActiveSection>("dashboard");
+    useState<ActiveSection>("keywords");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [keywordData, setKeywordData] =
     useState<CrossPlatformKeyword | null>(null);
   const [opportunities, setOpportunities] =
     useState<OpportunityAnalysis | null>(null);
-  const [searchedKeyword, setSearchedKeyword] = useState("");
 
   async function handleSearch(keyword: string) {
     setLoading(true);
     setError(null);
-    setSearchedKeyword(keyword);
 
     try {
       const kw = await getCrossPlatformKeyword(keyword);
@@ -43,12 +41,35 @@ export default function Home() {
     }
   }
 
+  // Compute insight banner data
+  const platformCount = keywordData
+    ? Object.keys(keywordData.platforms).length
+    : 0;
+  const primaryName = keywordData?.primary_platform
+    ? PLATFORM_LABELS[keywordData.primary_platform] ||
+      keywordData.primary_platform
+    : "";
+  const primaryVolume =
+    keywordData?.primary_platform
+      ? keywordData.platforms[keywordData.primary_platform]?.volume ?? 0
+      : 0;
+  const primaryShare =
+    keywordData && keywordData.total_volume > 0
+      ? ((primaryVolume / keywordData.total_volume) * 100).toFixed(1)
+      : "0";
+  const primaryTrend =
+    keywordData?.primary_platform
+      ? keywordData.platforms[keywordData.primary_platform]?.trend ?? []
+      : [];
+  const trendInfo =
+    primaryTrend.length >= 6 ? trendDirection(primaryTrend) : null;
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="border-b border-slate-200 bg-white">
+      <header className="border-b border-slate-200 bg-white sticky top-0 z-30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
+          <div className="flex h-14 items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600">
                 <svg
@@ -65,52 +86,53 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <h1 className="text-lg font-semibold text-slate-900">
-                Wpp Total Search
-              </h1>
+              <span className="text-base font-semibold text-slate-900">
+                Total Search
+              </span>
+              <span className="text-xs text-slate-400 hidden sm:inline">
+                Cross-Platform Search Intelligence
+              </span>
             </div>
 
-            <nav className="flex gap-1 rounded-xl bg-slate-100 p-1">
-              <button
-                onClick={() => setActiveSection("dashboard")}
-                className={`rounded-lg px-4 py-1.5 text-sm font-medium transition-colors ${
-                  activeSection === "dashboard"
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
-                }`}
-              >
-                Dashboard
-              </button>
-              <button
-                onClick={() => setActiveSection("brand-audit")}
-                className={`rounded-lg px-4 py-1.5 text-sm font-medium transition-colors ${
-                  activeSection === "brand-audit"
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
-                }`}
-              >
-                Brand Audit
-              </button>
+            {/* Nav — underline tabs */}
+            <nav className="flex items-center gap-1">
+              {([
+                { key: "keywords", label: "Keywords", enabled: true },
+                { key: "demand", label: "Demand", enabled: false },
+                { key: "compare", label: "Compare", enabled: false },
+                { key: "brand-audit", label: "Brand Audit", enabled: true },
+              ] as const).map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => tab.enabled && setActiveSection(tab.key)}
+                  disabled={!tab.enabled}
+                  className={`px-4 py-4 text-sm font-medium border-b-2 transition-colors ${
+                    activeSection === tab.key
+                      ? "border-indigo-600 text-indigo-600"
+                      : tab.enabled
+                        ? "border-transparent text-slate-500 hover:text-slate-700"
+                        : "border-transparent text-slate-300 cursor-not-allowed"
+                  }`}
+                >
+                  {tab.label}
+                  {!tab.enabled && (
+                    <span className="ml-1.5 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-400">
+                      Soon
+                    </span>
+                  )}
+                </button>
+              ))}
             </nav>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        {activeSection === "dashboard" && (
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        {activeSection === "keywords" && (
           <>
-            {/* Hero / Search */}
-            <section className="flex flex-col items-center text-center pt-8 pb-4">
-              <h2 className="text-3xl font-bold text-slate-900 mb-2">
-                Where does your audience search?
-              </h2>
-              <p className="text-slate-500 mb-8 max-w-lg">
-                Understand search demand across Google, TikTok, YouTube,
-                Instagram, Amazon and more. Find untapped growth channels.
-              </p>
-              <SearchBar onSearch={handleSearch} loading={loading} />
-            </section>
+            {/* Search Card */}
+            <SearchBar onSearch={handleSearch} loading={loading} />
 
             {/* Error */}
             {error && (
@@ -121,50 +143,100 @@ export default function Home() {
 
             {/* Results */}
             {keywordData && (
-              <div className="space-y-8">
-                <div className="flex items-baseline gap-3">
-                  <h2 className="text-xl font-semibold text-slate-900">
-                    Results for
-                  </h2>
-                  <span className="rounded-lg bg-indigo-50 border border-indigo-200 px-3 py-1 text-sm font-medium text-indigo-700">
-                    {searchedKeyword}
-                  </span>
+              <>
+                {/* Insight Banner */}
+                <div className="rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-500 p-5 text-white">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-[11px] font-semibold text-indigo-200 uppercase tracking-wider mb-1">
+                        WHERE
+                      </p>
+                      <p className="text-sm text-white/90">
+                        {formatVolume(keywordData.total_volume)} monthly volume
+                        across {platformCount} platforms.{" "}
+                        {primaryName} leads with {primaryShare}%.
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-semibold text-indigo-200 uppercase tracking-wider mb-1">
+                        WHAT DRIVES IT
+                      </p>
+                      <p className="text-sm text-white/90">
+                        {trendInfo
+                          ? `${primaryName} trend is ${trendInfo.label.toLowerCase()}. ${
+                              trendInfo.label === "Growing"
+                                ? "Rising demand signals across platforms."
+                                : trendInfo.label === "Declining"
+                                  ? "Decreasing search interest detected."
+                                  : "Consistent search demand over time."
+                            }`
+                          : "Trend and competitive data loading..."}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-semibold text-indigo-200 uppercase tracking-wider mb-1">
+                        PLATFORMS
+                      </p>
+                      <p className="text-sm text-white/90">
+                        {platformCount} active platforms with search demand
+                        signals detected for this keyword.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 1: Where are users searching? */}
+                <div className="flex items-center gap-3 pt-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 text-sm font-bold">
+                    1
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-slate-900">
+                      Where are users searching?
+                    </h2>
+                    <p className="text-sm text-slate-500">
+                      Total search volume across platforms — where the demand
+                      actually lives
+                    </p>
+                  </div>
                 </div>
 
                 {/* Stats */}
                 <StatsRow data={keywordData} />
 
-                {/* Chart */}
+                {/* Search Distribution (donut + list + volume overview) */}
                 <PlatformVolumeChart data={keywordData} />
 
-                {/* Platform Breakdown */}
-                <div>
-                  <h3 className="text-lg font-semibold text-slate-900 mb-4">
-                    Search Demand by Platform
-                  </h3>
-                  <PlatformCards data={keywordData} />
-                </div>
-
-                {/* Opportunities */}
-                {opportunities && (
-                  <div>
-                    <h3 className="text-lg font-semibold text-slate-900 mb-4">
-                      Growth Opportunities
-                    </h3>
+                {/* Section 2: Growth Opportunities */}
+                {opportunities && opportunities.platform_gaps.length > 0 && (
+                  <>
+                    <div className="flex items-center gap-3 pt-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 text-sm font-bold">
+                        2
+                      </div>
+                      <div>
+                        <h2 className="text-lg font-semibold text-slate-900">
+                          Growth Opportunities
+                        </h2>
+                        <p className="text-sm text-slate-500">
+                          Platform gaps and expansion potential
+                        </p>
+                      </div>
+                    </div>
                     <OpportunityCards
                       gaps={opportunities.platform_gaps}
                       overallScore={opportunities.opportunity_score}
                     />
-                  </div>
+                  </>
                 )}
-              </div>
+              </>
             )}
 
             {/* Empty state */}
             {!keywordData && !loading && !error && (
-              <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+              <div className="flex flex-col items-center justify-center py-16 text-slate-400">
                 <svg
-                  className="h-16 w-16 mb-4"
+                  className="h-12 w-12 mb-3"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1}
@@ -177,15 +249,50 @@ export default function Home() {
                   />
                 </svg>
                 <p className="text-sm">
-                  Search for a keyword to see cross-platform analysis
+                  Enter a keyword above to see cross-platform search analysis
                 </p>
               </div>
             )}
           </>
         )}
 
+        {/* Placeholder for future tabs */}
+        {(activeSection === "demand" || activeSection === "compare") && (
+          <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+            <div className="rounded-full bg-slate-100 p-4 mb-4">
+              <svg
+                className="h-8 w-8 text-slate-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                />
+              </svg>
+            </div>
+            <p className="text-sm font-medium text-slate-500">Coming Soon</p>
+            <p className="text-xs text-slate-400 mt-1">
+              This feature is under development
+            </p>
+          </div>
+        )}
+
         {activeSection === "brand-audit" && <BrandAudit />}
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-200 bg-white mt-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 text-center">
+          <p className="text-sm font-medium text-slate-900">Total Search</p>
+          <p className="text-xs text-slate-400 mt-1">
+            Cross-Platform Search Intelligence
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
