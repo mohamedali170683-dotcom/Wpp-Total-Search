@@ -7,7 +7,8 @@ import PlatformVolumeChart from "@/components/PlatformVolumeChart";
 import PlatformCards from "@/components/PlatformCards";
 import OpportunityCards from "@/components/OpportunityCards";
 import BrandAudit from "@/components/BrandAudit";
-import { getCrossPlatformKeyword, analyzeOpportunity } from "@/lib/api";
+import { getCrossPlatformKeyword } from "@/lib/api";
+import { analyzeKeyword } from "@/lib/analyzer";
 import type { CrossPlatformKeyword, OpportunityAnalysis } from "@/lib/types";
 
 type ActiveSection = "dashboard" | "brand-audit";
@@ -29,10 +30,8 @@ export default function Home() {
     setSearchedKeyword(keyword);
 
     try {
-      const [kw, opp] = await Promise.all([
-        getCrossPlatformKeyword(keyword),
-        analyzeOpportunity(keyword),
-      ]);
+      const kw = await getCrossPlatformKeyword(keyword);
+      const opp = analyzeKeyword(kw);
       setKeywordData(kw);
       setOpportunities(opp);
     } catch (err) {
