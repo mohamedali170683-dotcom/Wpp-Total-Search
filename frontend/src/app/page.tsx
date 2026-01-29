@@ -44,9 +44,9 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="border-b border-zinc-800/60">
+      <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-3">
@@ -65,18 +65,18 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <h1 className="text-lg font-semibold text-zinc-100">
+              <h1 className="text-lg font-semibold text-slate-900">
                 Wpp Total Search
               </h1>
             </div>
 
-            <nav className="flex gap-1 rounded-xl bg-zinc-800/50 p-1">
+            <nav className="flex gap-1 rounded-xl bg-slate-100 p-1">
               <button
                 onClick={() => setActiveSection("dashboard")}
                 className={`rounded-lg px-4 py-1.5 text-sm font-medium transition-colors ${
                   activeSection === "dashboard"
-                    ? "bg-zinc-700 text-zinc-100"
-                    : "text-zinc-400 hover:text-zinc-300"
+                    ? "bg-white text-slate-900 shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
                 }`}
               >
                 Dashboard
@@ -85,8 +85,8 @@ export default function Home() {
                 onClick={() => setActiveSection("brand-audit")}
                 className={`rounded-lg px-4 py-1.5 text-sm font-medium transition-colors ${
                   activeSection === "brand-audit"
-                    ? "bg-zinc-700 text-zinc-100"
-                    : "text-zinc-400 hover:text-zinc-300"
+                    ? "bg-white text-slate-900 shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
                 }`}
               >
                 Brand Audit
@@ -102,20 +102,19 @@ export default function Home() {
           <>
             {/* Hero / Search */}
             <section className="flex flex-col items-center text-center pt-8 pb-4">
-              <h2 className="text-3xl font-bold text-zinc-100 mb-2">
-                Cross-Platform Keyword Intelligence
+              <h2 className="text-3xl font-bold text-slate-900 mb-2">
+                Where does your audience search?
               </h2>
-              <p className="text-zinc-400 mb-8 max-w-lg">
-                Analyze keyword volume across Google, TikTok, YouTube,
-                Instagram, Amazon and more. Discover platform gaps and untapped
-                opportunities.
+              <p className="text-slate-500 mb-8 max-w-lg">
+                Understand search demand across Google, TikTok, YouTube,
+                Instagram, Amazon and more. Find untapped growth channels.
               </p>
               <SearchBar onSearch={handleSearch} loading={loading} />
             </section>
 
             {/* Error */}
             {error && (
-              <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">
+              <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
                 {error}
               </div>
             )}
@@ -124,10 +123,10 @@ export default function Home() {
             {keywordData && (
               <div className="space-y-8">
                 <div className="flex items-baseline gap-3">
-                  <h2 className="text-xl font-semibold text-zinc-100">
+                  <h2 className="text-xl font-semibold text-slate-900">
                     Results for
                   </h2>
-                  <span className="rounded-lg bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 text-sm font-medium text-indigo-400">
+                  <span className="rounded-lg bg-indigo-50 border border-indigo-200 px-3 py-1 text-sm font-medium text-indigo-700">
                     {searchedKeyword}
                   </span>
                 </div>
@@ -140,8 +139,8 @@ export default function Home() {
 
                 {/* Platform Breakdown */}
                 <div>
-                  <h3 className="text-lg font-semibold text-zinc-100 mb-4">
-                    Platform Breakdown
+                  <h3 className="text-lg font-semibold text-slate-900 mb-4">
+                    Search Demand by Platform
                   </h3>
                   <PlatformCards data={keywordData} />
                 </div>
@@ -149,8 +148,8 @@ export default function Home() {
                 {/* Opportunities */}
                 {opportunities && (
                   <div>
-                    <h3 className="text-lg font-semibold text-zinc-100 mb-4">
-                      Opportunity Detection
+                    <h3 className="text-lg font-semibold text-slate-900 mb-4">
+                      Growth Opportunities
                     </h3>
                     <OpportunityCards
                       gaps={opportunities.platform_gaps}
@@ -163,7 +162,7 @@ export default function Home() {
 
             {/* Empty state */}
             {!keywordData && !loading && !error && (
-              <div className="flex flex-col items-center justify-center py-20 text-zinc-600">
+              <div className="flex flex-col items-center justify-center py-20 text-slate-400">
                 <svg
                   className="h-16 w-16 mb-4"
                   fill="none"

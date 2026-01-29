@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Wpp Total Search - Cross-Platform Keyword Intelligence",
+  title: "Wpp Total Search - Cross-Platform Search Intelligence",
   description:
-    "Analyze keyword volume across Google, TikTok, YouTube, Instagram, Amazon and more. Discover platform gaps and untapped opportunities.",
+    "Understand where your audience searches across Google, TikTok, YouTube, Instagram, Amazon and more.",
 };
 
 export default function RootLayout({
@@ -24,9 +24,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-zinc-950 text-zinc-100`}
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-slate-50 text-slate-900`}
       >
         {children}
       </body>
