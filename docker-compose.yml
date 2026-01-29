@@ -1,0 +1,66 @@
+# Wpp-Total-Search Docker Compose Configuration
+version: '3.8'
+
+services:
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_NAME=Wpp-Total-Search
+      - DEBUG=true
+      - USE_DEMO_DATA=true
+      - REDIS_URL=redis://redis:6379
+      # Uncomment and set these for production:
+      # - KEYWORDTOOL_API_KEY=${KEYWORDTOOL_API_KEY}
+      # - META_ACCESS_TOKEN=${META_ACCESS_TOKEN}
+      # - TIKTOK_ACCESS_TOKEN=${TIKTOK_ACCESS_TOKEN}
+      # - SEARCHAPI_KEY=${SEARCHAPI_KEY}
+    depends_on:
+      - redis
+    volumes:
+      - ./backend/demo_data:/app/demo_data:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Frontend (placeholder - uncomment when frontend is ready)
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - backend
+  #   environment:
+  #     - NEXT_PUBLIC_API_URL=http://backend:8000
+  #   restart: unless-stopped
+
+volumes:
+  redis_data:
+
+networks:
+  default:
+    name: wpp-total-search-network

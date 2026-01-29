@@ -1,0 +1,135 @@
+{
+  "brand": "OptimumNutrition",
+  "domain": "optimumnutrition.com",
+  "ads": {
+    "meta": [
+      {
+        "id": "meta_001",
+        "platform": "meta",
+        "advertiser_name": "Optimum Nutrition",
+        "ad_format": "video",
+        "first_shown": "2024-01-15",
+        "last_shown": "2024-03-01",
+        "status": "active",
+        "headline": "Gold Standard Whey - #1 Selling Protein",
+        "body_text": "Build muscle with 24g of protein per serving. Shop now and save 20%!",
+        "landing_url": "https://www.optimumnutrition.com/gold-standard-whey",
+        "impressions_range": "1M-5M",
+        "target_countries": ["US", "UK", "DE"],
+        "target_age_ranges": ["18-24", "25-34", "35-44"],
+        "keywords_detected": ["whey protein", "gold standard", "muscle building", "protein powder"]
+      },
+      {
+        "id": "meta_002",
+        "platform": "meta",
+        "advertiser_name": "Optimum Nutrition",
+        "ad_format": "image",
+        "first_shown": "2024-02-01",
+        "last_shown": "2024-03-01",
+        "status": "active",
+        "headline": "Plant-Based Protein That Tastes Amazing",
+        "body_text": "100% vegan, 20g protein. No compromise on taste.",
+        "landing_url": "https://www.optimumnutrition.com/plant-protein",
+        "impressions_range": "100K-500K",
+        "target_countries": ["US"],
+        "target_age_ranges": ["18-24", "25-34"],
+        "keywords_detected": ["vegan protein", "plant protein", "plant-based"]
+      },
+      {
+        "id": "meta_003",
+        "platform": "meta",
+        "advertiser_name": "Optimum Nutrition",
+        "ad_format": "carousel",
+        "first_shown": "2024-01-20",
+        "last_shown": "2024-02-28",
+        "status": "active",
+        "headline": "Pre-Workout Power Stack",
+        "body_text": "Fuel your workouts with our best-selling pre-workout formulas. Free shipping on orders $50+",
+        "landing_url": "https://www.optimumnutrition.com/pre-workout",
+        "impressions_range": "500K-1M",
+        "target_countries": ["US", "CA"],
+        "target_age_ranges": ["18-24", "25-34", "35-44"],
+        "keywords_detected": ["pre workout", "energy", "workout supplement"]
+      }
+    ],
+    "tiktok": [
+      {
+        "id": "tiktok_001",
+        "platform": "tiktok",
+        "advertiser_name": "Optimum Nutrition Official",
+        "ad_format": "video",
+        "first_shown": "2024-02-15",
+        "last_shown": "2024-03-01",
+        "status": "active",
+        "headline": "POV: You finally found THE protein",
+        "body_text": "Gold Standard hits different 💪 #fitness #protein #gym",
+        "video_url": "https://example.com/video.mp4",
+        "landing_url": "https://www.optimumnutrition.com",
+        "impressions_range": "2M-5M",
+        "target_countries": ["US"],
+        "target_age_ranges": ["18-24", "25-34"],
+        "keywords_detected": ["protein", "fitness", "gym", "gold standard"]
+      }
+    ],
+    "google": [
+      {
+        "id": "google_001",
+        "platform": "google",
+        "advertiser_name": "Optimum Nutrition",
+        "ad_format": "text",
+        "first_shown": "2024-01-01",
+        "last_shown": "2024-03-01",
+        "status": "active",
+        "headline": "Official ON Gold Standard Whey",
+        "body_text": "24g Protein, 5g BCAAs. Free Shipping on Orders $50+. Shop Now!",
+        "landing_url": "https://www.optimumnutrition.com/gold-standard-whey",
+        "keywords_detected": ["whey protein", "gold standard whey", "protein powder", "ON whey"]
+      },
+      {
+        "id": "google_002",
+        "platform": "google",
+        "advertiser_name": "Optimum Nutrition",
+        "ad_format": "text",
+        "first_shown": "2024-01-15",
+        "last_shown": "2024-03-01",
+        "status": "active",
+        "headline": "Best Pre-Workout Supplement | Optimum Nutrition",
+        "body_text": "Clinically Dosed Ingredients. Energy + Focus + Performance. Shop Pre-Workout.",
+        "landing_url": "https://www.optimumnutrition.com/pre-workout",
+        "keywords_detected": ["pre workout", "best pre workout", "workout supplement"]
+      },
+      {
+        "id": "google_003",
+        "platform": "google",
+        "advertiser_name": "Optimum Nutrition",
+        "ad_format": "image",
+        "first_shown": "2024-02-01",
+        "last_shown": "2024-03-01",
+        "status": "active",
+        "headline": "Creatine Monohydrate - Pure & Micronized",
+        "body_text": "5g per serving. Supports strength & power. Lab tested quality.",
+        "landing_url": "https://www.optimumnutrition.com/creatine",
+        "keywords_detected": ["creatine", "creatine monohydrate", "micronized creatine"]
+      }
+    ]
+  },
+  "keywords_in_ads": [
+    "whey protein", 
+    "gold standard", 
+    "muscle building", 
+    "protein powder", 
+    "vegan protein", 
+    "plant protein", 
+    "plant-based", 
+    "ON whey",
+    "pre workout",
+    "best pre workout",
+    "workout supplement",
+    "creatine",
+    "creatine monohydrate",
+    "fitness",
+    "gym"
+  ],
+  "platforms_active": ["meta", "google", "tiktok"],
+  "platforms_missing": []
+}
